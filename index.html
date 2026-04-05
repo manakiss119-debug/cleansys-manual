@@ -327,38 +327,35 @@
       transform: translateY(-2px);
     } 
 /* 스플래시 스크린 (시작 화면) 설정 */
+/* 스플래시 스크린 (시작 화면) 설정 - 애니메이션 제거 및 고정 */
     #splash-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
-      height: 100vh;
-      background: var(--bg-gradient);
+      height: 100dvh;
+      background: #F2F4F6; /* 렌더링 안정을 위해 단색 배경 사용 */
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 9999; /* 제일 위에 나타나도록 설정 */
-      transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+      z-index: 9999;
+      transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
     }
     .splash-logo {
-      width: 100px; /* 시작 화면 로고 크기 */
-      margin-bottom: 20px;
-      animation: pulse 1.5s infinite;
+      width: 90px;
+      margin-bottom: 24px;
+      /* pulse 애니메이션을 완전히 삭제하여 로고를 가만히 고정시킵니다 */
     }
     .splash-text {
       font-size: 1.2rem;
       font-weight: 800;
       color: var(--primary);
       letter-spacing: -0.5px;
+      /* 폰트가 늦게 로딩되더라도 글자 크기나 모양이 튀지 않도록 시스템 기본 폰트로 강제 지정 */
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     }
 
-    /* 로고 부드럽게 움직이는 애니메이션 */
-    @keyframes pulse {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.05); opacity: 1; }
-      100% { transform: scale(0.95); opacity: 0.8; }
-    }
  </style>
 </head>
 <body>
