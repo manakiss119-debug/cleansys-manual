@@ -11,25 +11,26 @@
   <meta name="apple-mobile-web-app-title" content="총량 매뉴얼">
   <title>총량 매뉴얼</title>
 
-  <style>
+ <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
     
     :root {
-      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-      --card-bg: rgba(255, 255, 255, 0.85);
-      --card-border: rgba(255, 255, 255, 0.6);
+      /* [NEW] 트렌디하고 세련된 모던 IT 앱 색상 팔레트 */
+      --bg-gradient: linear-gradient(135deg, #F2F4F6 0%, #E5E8EB 100%); /* 깔끔한 라이트 그레이 */
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(255, 255, 255, 0.8);
       
-      --primary: #1e293b;
-      --accent: #0284c7;
-      --accent-light: #e0f2fe;
+      --primary: #191F28;       /* 아주 깊은 다크 네이비 (메인 텍스트 및 강조) */
+      --accent: #3182F6;        /* 트렌디한 비비드 블루 (포인트 색상) */
+      --accent-light: #E8F3FF;  /* 아주 부드러운 블루 배경 (팁 박스 등) */
       
-      --text-main: #0f172a;
-      --text-sub: #475569;
-      --text-footer: #64748b;
+      --text-main: #191F28;     /* 뚜렷하고 세련된 블랙 */
+      --text-sub: #4E5968;      /* 눈이 편안한 서브 그레이 */
+      --text-footer: #8B95A1;   /* 은은한 푸터 텍스트 */
       
-      --radius-lg: 20px;
-      --radius-md: 12px;
-      --shadow: 0 10px 40px rgba(15, 23, 42, 0.08);
+      --radius-lg: 24px;        /* 부드러운 모서리 라운딩 */
+      --radius-md: 14px;
+      --shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -41,18 +42,23 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* 하얀 화면 깜빡임 방지용 배경색 */
+    html {
+      background-color: #F2F4F6;
+    }
+
     body {
       background: var(--bg-gradient);
       color: var(--text-main);
       display: flex;
       justify-content: center;
-      min-height: 100vh;
+      min-height: 100dvh; /* 스마트폰 주소창 꿀렁임 방지 */
     }
 
     .app-container {
       width: 100%;
       max-width: 480px;
-      height: 100vh;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -61,27 +67,26 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.05);
     }
 
-/* 상단 헤더 레이아웃 (전체 세로 정렬) */
+    /* 상단 헤더 레이아웃 */
     header {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 24px 15px 16px;
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--card-border);
       z-index: 10;
     }
     
-    /* 로고와 메인타이틀을 한 줄로 묶는 상자 */
     .title-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px; /* 로고와 메인타이틀 사이 간격 */
-      margin-bottom: 4px; /* 서브타이틀과의 위아래 간격 */
+      gap: 8px;
+      margin-bottom: 4px;
     }
     
     .main-title {
@@ -89,7 +94,7 @@
       font-weight: 800;
       color: var(--text-main);
       letter-spacing: -0.5px;
-      margin-bottom: 0; /* 기존 마진 제거 */
+      margin-bottom: 0;
     }
     
     .sub-title {
@@ -97,22 +102,24 @@
       font-weight: 600;
       color: var(--accent);
       letter-spacing: 0.5px;
+      align-self: center; /* 서브타이틀 중앙 정렬 */
     }
     
-    /* 상단 로고 크기 (메인타이틀 글씨 크기에 어울리게 축소) */
     .logo-img {
       height: 24px; 
       display: block;
       margin: 0;
     }
+
+    /* 상단 카테고리 네비게이션 */
     .category-nav {
       display: flex;
       overflow-x: auto;
       padding: 12px 20px 16px;
       gap: 10px;
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       scrollbar-width: none;
     }
     .category-nav::-webkit-scrollbar { display: none; }
@@ -122,7 +129,7 @@
       padding: 10px 18px;
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.8);
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.9);
       color: var(--text-sub);
       font-weight: 700;
       font-size: 0.9rem;
@@ -134,7 +141,8 @@
       background: var(--primary);
       color: #fff;
       border-color: var(--primary);
-      box-shadow: 0 4px 12px rgba(30, 41, 59, 0.25);
+      box-shadow: 0 6px 16px rgba(25, 31, 40, 0.25);
+      transform: translateY(-1px);
     }
 
     .content-area {
@@ -146,14 +154,14 @@
 
     .section-nav {
       display: flex;
-      background: rgba(203, 213, 225, 0.4);
+      background: rgba(229, 232, 235, 0.6);
       border-radius: var(--radius-md);
-      padding: 5px;
+      padding: 6px;
       margin-bottom: 24px;
     }
     .sec-btn {
       flex: 1;
-      padding: 10px 0;
+      padding: 12px 0;
       text-align: center;
       border-radius: 10px;
       border: none;
@@ -167,7 +175,7 @@
     .sec-btn.active {
       background: #ffffff;
       color: var(--primary);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
     }
 
     .card {
@@ -176,7 +184,7 @@
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--card-border);
       border-radius: var(--radius-lg);
-      padding: 24px;
+      padding: 28px 24px;
       box-shadow: var(--shadow);
       animation: slideUp 0.4s ease forwards;
     }
@@ -208,8 +216,8 @@
     .data-list li {
       position: relative;
       padding-left: 26px;
-      margin-bottom: 14px;
-      line-height: 1.5;
+      margin-bottom: 16px;
+      line-height: 1.6;
       color: var(--text-main);
       font-size: 0.95rem;
     }
@@ -217,12 +225,12 @@
       content: '✓';
       position: absolute;
       left: 0;
-      top: 3px;
+      top: 4px;
       color: #fff;
       background: var(--accent);
       width: 16px;
       height: 16px;
-      border-radius: 4px;
+      border-radius: 5px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -239,7 +247,7 @@
       color: #fff;
       width: 18px;
       height: 18px;
-      border-radius: 50%;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -249,31 +257,31 @@
 
     .tip-box {
       background: var(--accent-light);
-      border-left: 3px solid var(--accent);
-      padding: 16px;
+      border-left: 4px solid var(--accent);
+      padding: 16px 18px;
       border-radius: 4px 12px 12px 4px;
       margin-bottom: 20px;
       font-size: 0.9rem;
       line-height: 1.6;
-      color: #0c4a6e;
+      color: #191F28;
       white-space: pre-wrap;
       font-weight: 500;
     }
 
     .image-container {
-      margin-top: 10px;
+      margin-top: 12px;
       margin-bottom: 20px;
       text-align: center;
       background: #ffffff;
       padding: 8px;
       border-radius: var(--radius-md);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
       border: 1px solid rgba(0,0,0,0.05);
     }
     .image-container img {
       width: 100%;
       border-radius: 8px;
-      background-color: #f1f5f9;
+      background-color: #F2F4F6;
       object-fit: cover;
       min-height: 140px;
     }
@@ -284,82 +292,85 @@
       font-weight: 600;
       color: var(--text-sub);
     }
-    
-/* 하단 푸터 레이아웃 */
-    .app-footer {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 14px 20px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-footer);
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-top: 1px solid var(--card-border);
-      letter-spacing: 0.5px;
-      z-index: 10;
-    }
-    
-    /* 하단 푸터용 로고 크기 */
-    .footer-logo {
-      height: 20px; 
-      display: block;
-    }
-/* 세련된 유튜브 버튼 스타일 (너비 및 크기 축소 버전) */
+
+    /* 세련된 유튜브 버튼 스타일 */
     .youtube-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 4px; /* 재생 기호(▶)와 글씨 사이의 간격 축소 */
-      background-color: #F04452; 
+      gap: 6px;
+      background-color: #F04452; /* 모던한 레드 컬러 */
       color: white;
-      padding: 6px 12px; /* 👈 핵심: 위아래 여백 6px, 좌우 여백을 12px로 대폭 줄임 */
-      border-radius: 6px; /* 버튼 모서리 둥글기를 작은 버튼에 어울리게 조절 */
+      padding: 10px 18px;
+      border-radius: 10px;
       text-decoration: none;
       font-weight: 700;
-      font-size: 0.8rem; /* 👈 핵심: 글씨 크기를 약간 줄임 */
-      margin: 8px 0;
-      width: fit-content; /* 글자 너비에 딱 맞게 버튼 크기 고정 */
-      box-shadow: 0 4px 10px rgba(240, 68, 82, 0.2);
+      font-size: 0.9rem;
+      margin: 12px 0;
+      box-shadow: 0 4px 12px rgba(240, 68, 82, 0.25);
       transition: var(--transition);
     }
     .youtube-btn:hover {
       background-color: #D93D4A;
       transform: translateY(-2px);
     }
-/* 스플래시 스크린 (시작 화면) 설정 - 애니메이션 제거 및 고정 */
+    
+    /* 하단 푸터 */
+    .app-footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-footer);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--card-border);
+      letter-spacing: 0.5px;
+      z-index: 10;
+    }
+    .footer-logo {
+      height: 16px; 
+      display: block;
+    }
+
+    /* 스플래시 스크린 */
     #splash-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100dvh;
-      background: #F2F4F6; /* 렌더링 안정을 위해 단색 배경 사용 */
+      background: var(--bg-gradient);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+      transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
     }
     .splash-logo {
       width: 90px;
       margin-bottom: 24px;
-      /* pulse 애니메이션을 완전히 삭제하여 로고를 가만히 고정시킵니다 */
+      animation: pulse 1.5s infinite;
     }
     .splash-text {
       font-size: 1.2rem;
       font-weight: 800;
       color: var(--primary);
       letter-spacing: -0.5px;
-      /* 폰트가 늦게 로딩되더라도 글자 크기나 모양이 튀지 않도록 시스템 기본 폰트로 강제 지정 */
-      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
     }
 
- </style>
+    .citation { display: none; }
+  </style>
 </head>
 <body>
 <div id="splash-screen">
