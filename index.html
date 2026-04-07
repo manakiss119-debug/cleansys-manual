@@ -293,27 +293,29 @@
       color: var(--text-sub);
     }
 
-    /* 세련된 유튜브 버튼 스타일 */
+        /* 세련된 유튜브 버튼 스타일 (너비 및 크기 축소 버전) */
     .youtube-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      background-color: #F04452; /* 모던한 레드 컬러 */
+      gap: 4px; /* 재생 기호(▶)와 글씨 사이의 간격 축소 */
+      background-color: #F04452; 
       color: white;
-      padding: 10px 18px;
-      border-radius: 10px;
+      padding: 6px 12px; /* 👈 핵심: 위아래 여백 6px, 좌우 여백을 12px로 대폭 줄임 */
+      border-radius: 6px; /* 버튼 모서리 둥글기를 작은 버튼에 어울리게 조절 */
       text-decoration: none;
       font-weight: 700;
-      font-size: 0.9rem;
-      margin: 12px 0;
-      box-shadow: 0 4px 12px rgba(240, 68, 82, 0.25);
+      font-size: 0.8rem; /* 👈 핵심: 글씨 크기를 약간 줄임 */
+      margin: 8px 0;
+      width: fit-content; /* 글자 너비에 딱 맞게 버튼 크기 고정 */
+      box-shadow: 0 4px 10px rgba(240, 68, 82, 0.2);
       transition: var(--transition);
     }
     .youtube-btn:hover {
       background-color: #D93D4A;
       transform: translateY(-2px);
     }
+
     
     /* 하단 푸터 */
     .app-footer {
