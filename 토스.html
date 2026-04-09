@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <link rel="icon" href="logo.gif">
+  <link rel="apple-touch-icon" href="logo.gif">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  
+  <meta name="apple-mobile-web-app-title" content="총량 매뉴얼">
+  <title>총량 매뉴얼</title>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    
+    :root {
+      /* 트렌디하고 세련된 모던 IT 앱 색상 팔레트 */
+      --bg-gradient: linear-gradient(135deg, #F2F4F6 0%, #E5E8EB 100%); 
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(255, 255, 255, 0.8);
+      
+      --primary: #191F28;       
+      --accent: #3182F6;        
+      --accent-light: #E8F3FF;  
+      
+      --text-main: #191F28;     
+      --text-sub: #4E5968;      
+      --text-footer: #8B95A1;   
+      
+      --radius-lg: 24px;        
+      --radius-md: 14px;
+      --shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* 하얀 화면 깜빡임 방지용 배경색 */
+    html {
+      background-color: #F2F4F6;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      min-height: 100dvh; /* 스마트폰 주소창 꿀렁임 방지 */
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      background: transparent;
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    }
+
+    /* 상단 헤더 레이아웃 */
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 15px 16px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      z-index: 10;
+    }
+    
+    .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    
+    .main-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+      margin-bottom: 0;
+    }
+    
+    .sub-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+      align-self: center; /* 서브타이틀 중앙 정렬 */
+    }
+    
+    .logo-img {
+      height: 24px; 
+      display: block;
+      margin: 0;
+    }
+
+/* 상단 카테고리 네비게이션 (가운데 정렬 적용) */
+    .category-nav {
+      display: flex;
+      justify-content: center; /* 👈 4개의 아이콘을 화면 정중앙으로 모아주는 코드 */
+      overflow-x: auto;
+      padding: 16px 20px 20px;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      scrollbar-width: none;
+      align-items: center;
+    }
+    .category-nav::-webkit-scrollbar { display: none; }
+    
+    .cat-btn {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column; /* 아이콘 위, 글씨 아래 정렬 */
+      align-items: center;
+      justify-content: center;
+      gap: 6px; 
+      padding: 12px 14px;
+      border-radius: 16px; /* 사진과 같은 둥근 사각형 모서리 */
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      background: #ffffff; /* 비활성화 시 하얀 바탕 */
+      color: #8B95A1; /* 비활성화 시 회색 텍스트 */
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+      min-width: 68px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+    
+    .cat-btn i {
+      font-size: 26px;
+      color: #8B95A1; /* 비활성화 시 회색 아이콘 */
+      transition: var(--transition);
+    }
+
+    /* 선택된 메뉴(Active) 스타일 - 사진처럼 연한 파란색 바탕 */
+    .cat-btn.active {
+      background: #E8F3FF; /* 연한 파란색 배경 */
+      color: #3182F6; /* 파란색 텍스트 */
+      border-color: #E8F3FF;
+      box-shadow: 0 4px 12px rgba(49, 130, 246, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    .cat-btn.active i {
+      color: #3182F6; /* 파란색 아이콘 */
+    }
+
+    .content-area {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      padding-bottom: 30px;
+    }
+
+    .section-nav {
+      display: flex;
+      background: rgba(229, 232, 235, 0.6);
+      border-radius: var(--radius-md);
+      padding: 6px;
+      margin-bottom: 24px;
+    }
+    .sec-btn {
+      flex: 1;
+      padding: 12px 0;
+      text-align: center;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: var(--text-sub);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .sec-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+      animation: slideUp 0.4s ease forwards;
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 16px;
+      background: var(--accent);
+      border-radius: 4px;
+    }
+
+    .data-list { list-style: none; }
+    .data-list li {
+      position: relative;
+      padding-left: 26px;
+      margin-bottom: 16px;
+      line-height: 1.6;
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+    .list-equipment li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      top: 4px;
+      color: #fff;
+      background: var(--accent);
+      width: 16px;
+      height: 16px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: bold;
+    }
+    .list-procedure li { counter-increment: step-counter; }
+    .list-procedure li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 2px;
+      background: var(--primary);
+      color: #fff;
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .tip-box {
+      background: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      padding: 16px 18px;
+      border-radius: 4px 12px 12px 4px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #191F28;
+      white-space: pre-wrap;
+      font-weight: 500;
+    }
+
+    .image-container {
+      margin-top: 12px;
+      margin-bottom: 20px;
+      text-align: center;
+      background: #ffffff;
+      padding: 8px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    .image-container img {
+      width: 100%;
+      border-radius: 8px;
+      background-color: #F2F4F6;
+      object-fit: cover;
+      min-height: 140px;
+    }
+    .image-caption {
+      margin-top: 10px;
+      margin-bottom: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+
+    /* 세련된 유튜브 버튼 스타일 (너비 및 크기 축소 버전) */
+    .youtube-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px; 
+      background-color: #F04452; 
+      color: white;
+      padding: 6px 12px; 
+      border-radius: 6px; 
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.8rem; 
+      margin: 8px 0;
+      width: fit-content; 
+      box-shadow: 0 4px 10px rgba(240, 68, 82, 0.2);
+      transition: var(--transition);
+    }
+    .youtube-btn:hover {
+      background-color: #D93D4A;
+      transform: translateY(-2px);
+    }
+
+    /* 하단 푸터 */
+    .app-footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-footer);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--card-border);
+      letter-spacing: 0.5px;
+      z-index: 10;
+    }
+    .footer-logo {
+      height: 16px; 
+      display: block;
+    }
+
+    /* 스플래시 스크린 */
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100dvh;
+      background: var(--bg-gradient);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+    }
+    .splash-logo {
+      width: 90px;
+      margin-bottom: 24px;
+      animation: pulse 1.5s infinite;
+    }
+    .splash-text {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .citation { display: none; }
+  </style>
+</head>
+<body>
+<div id="splash-screen">
+    <img src="logo.gif" alt="환경공단 로고" class="splash-logo">
+    <div class="splash-text">대기오염물질 총량관리 업무 매뉴얼</div>
+  </div>
+  <div class="app-container">
+    <header>
+      <div class="title-row">
+        <img src="logo.gif" alt="한국환경공단 로고 좌측" class="logo-img">
+        <div class="main-title">대기오염물질 총량관리 업무 매뉴얼</div>
+      </div>
+      
+      <div class="sub-title">상대정확도 시험</div>
+    </header>
+    
+    <nav class="category-nav" id="category-nav">
+      <button class="cat-btn active" data-cat="dust">
+        <i class="material-icons">cloud</i>
+        <span>먼지</span>
+      </button>
+      <button class="cat-btn" data-cat="hcl">
+        <i class="material-icons">water_drop</i>
+        <span>HCl</span>
+      </button>
+      <button class="cat-btn" data-cat="gas">
+        <i class="material-icons">science</i>
+        <span>가스</span>
+      </button>
+      <button class="cat-btn" data-cat="flow">
+        <i class="material-icons">air</i>
+        <span>유량</span>
+      </button>
+    </nav>
+
+    <div class="content-area">
+      <nav class="section-nav" id="section-nav"></nav>
+
+      <div class="card" id="main-card">
+        <div class="card-title" id="card-title">타이틀</div>
+        <div id="card-content">
+          </div>
+      </div>
+    </div>
+
+<footer class="app-footer">
+      <img src="logo.gif" alt="로고 좌측" class="footer-logo">
+      <span>한국환경공단 수도권서부환경본부</span>
+    </footer>
+  </div>
+
+  <script>
+    const CITE_TEXT = "<span class='citation'></span>";
+
+    // ✅ 사진 간편 추가 기능 적용
+    // 텍스트 사이에 [사진:파일명|사진설명] 이라고 적으면 자동으로 사진이 뜹니다.
+    const manualData = {
+      dust: {
+        tabs: [
+          { id: 'equipment', label: '준비물' },
+          { id: 'procedure', label: '업무절차' },
+          { id: 'input', label: '입력매뉴얼' }
+        ],
+        equipment: [
+          "굴뚝시료채취장치 \n (DSP-707G, DSP-707s)" + CITE_TEXT,
+          "측정값 저장을 위한 업무용 USB" + CITE_TEXT,
+          "외장 펌프, 시료채취도관" + CITE_TEXT,
+          "노즐 세트, 임핀저 세트, 여과지 및 여과지통, 받침대, 얼음" + CITE_TEXT,
+          "S형 피토우관이 장착된 시료채취관 및 플랜지" + CITE_TEXT,
+          "기타 전원연결 장비(멀티탭, 전기릴선 등)" + CITE_TEXT,
+          "수분자동측정기기" + CITE_TEXT
+        ],
+        procedure: [
+          "시료용 여과지를 조제하고 굴뚝시료채취 장치를 사전에 점검한 후 사업장으로 출발" + CITE_TEXT+"[유튜브:https://youtu.be/iKLdwdF0314|YouTube]  여과지 전처리 및 분석",         
+          "굴뚝시료채취장치를 평탄하고 안정된 장소에 설치한 후 전원 연결" + CITE_TEXT,
+          "굴뚝의 측정지점까지 옮기고, 측정점에 채취관을 수평이 되도록 설치" + CITE_TEXT,
+          "첫 번째, 두 번째 임핀저에는 물을 넣고, 세 번째는 공병, 네 번째는 실리카겔을 넣어 유해가스 및 수분이 장비로 유입되는 것을 방지" + CITE_TEXT,
+          "임핀저 박스, Umbilical Cable 및 굴뚝시료채취장치의 각종 센서 또는 연결구를 정확히 연결한 후 각 연결구 및 Cable의 Leak 여부 체크" + CITE_TEXT,
+          "상대정확도 시험을 위한 사전 조사를 실시(사전조사 항목은 굴뚝 형태 확인, 측정점 선정, 수분량 및 굴뚝내경 측정, 등속흡인을 위한 노즐크기 선정 등)" + CITE_TEXT,
+          "측정점은 대기오염공정시험기준 ES 01301.1 5.4 측정점의 선정에 따라 선정하고, 측정점에서 등속흡인을 위한 노즐 선정" + CITE_TEXT,
+          "수분량의 측정방법은 대기오염공정시험기준 ES 01321에 따르며, 자동측정법은 다음과 같다.  자동측정기의 전원을 연결한 후 충분히 안정화 ⇢  측정기기를 굴뚝에 설치 한 후 측정값이 안정되면, 1분 간격으로 5회 이상 측정한 결과의 평균값을 결과값으로 사용 ⇢  시료마다 사전 측정 실시" + CITE_TEXT,
+           "측정전, 등속흡인을 위하여 굴뚝시료채취장치의 각 설정메뉴에서 Parameter 값을 사전에 입력(이때, 채취관 내에 응축수가 발생하지 않도록 시료채취장치의 채취관 Heating Cable을 연결하고 온도를 120℃ 이상으로 설정)" + CITE_TEXT,
+           "채취관에 선정된 노즐을 장착하고, 여과지를 고정한 후 펌프를 가동하여 대기오염 공정시험기준 배출가스 중 무기물질편 ES 01301.3(배출가스 중 먼지)의 규정에 따라, 전체포집량이 5mg 이상 되도록 하거나 흡입가스량을 400ℓ 이상 또 는 흡인시간을 40분 이상 되도록 함(이때, 흡인시간은 자료수집기의 시간을 기준으로 하며 5분 단위로 흡인)" + CITE_TEXT,
+           "등속흡인을 완료하게 되면 펌프가 자동으로 동작을 멈추고 측정자료가 측정장치 내에 저장되며, 시료채취가 끝난 여과지를 새 여과지로 교체한 후 동일한 방법으로 총 5회 이상 측정(이때, 등속흡인계수(I)가 90%~110% 범위의 시료만 유효함)" + CITE_TEXT,
+           "측정 완료 후 측정자료 업무용 USB에 다운로드" + CITE_TEXT,
+           "시료흡인을 완료한 시료는 분석실에서 무게를 측정하며, 그 결과값과 다운로드한 측정자료 및 전송데이터를 비교하여 상대정확도 산출" + CITE_TEXT
+        ],
+        input: {
+          text: "➊ Stack Config \n • Xw(수분율) : 매 시료마다 수분량을 측정하여 입력 \n • Height(높이) : DSP-707S로부터 측정공까지의 높이 \n • Cp(피토관계수), Ds(굴뚝내경) \n • r0(표준상태 습가스 밀도) : 고체 및 액체연료를 사용하여 연소시키는 경우 r0=1.30kg/㎥로 하여도 무방\n\n➋ System\n • Dn(노즐직경) : Nozzle size에서 Est Dn으로 결정된 노즐 값 입력\n• Vmst(흡입할 총 목표 유량), t(시료채취 시간) :  Vmst와 t중 설정 값에 먼저 도달하면 자동 종료되므로, 5분단위 채취를 위해 t를 기준으로 설정하고 Vmst에는 매우  큰 값을 입력\n• Mode(측정방법) : Auto로 설정\n• Pump(펌프) : External로 설정\n\n※ DSP-707S 및 DSP-707G 각 메뉴별 설정방법\n① 수분값, 배출구 높이 및 직경, 채취관 피토계수 설정\n② 추천 노즐 직경(Est Dn) 확인\n③ 노즐 직경, 시료채취유량, 측정시간, MODE(측정방법) 0(Auto), Log(측정기간) : 1초, Pump : 0(Auto) 또는 1(External)로 설정\n④ 채취관 가열온도(120 ℃) 설정\n⑤ START 클릭하여 측정시작 및 측정값 확인 \n(특히, I(%) 값 90~110% 인지)확인\n⑥ 측정자료 USB에 저장" + CITE_TEXT + 
+                "\n\n[사진:dust3_1.png|① 수분값, 배출구 높이 및 직경, 채취관 피토계수 설정]\n"+"[사진:dust3_2.png|② 추천 노즐 직경(Est Dn) 확인]\n"+ 
+              "[사진:dust3_3.png|③ 노즐 직경, 시료채취유량, 측정시간, MODE(측정방법) 0(Auto), Log(측정기간) : 1초, Pump : 0(Auto) 또는 1(External)로 설정]\n" + 
+                "[사진:dust3_4.png|④ 채취관 가열온도(120℃) 설정 화면]\n" + 
+                "[사진:dust3_5.png|⑤ START 클릭하여 측정시작 및 측정값 확인 \n(특히, I(%) 값 90~110% 인지)확인]\n" + 
+                "[사진:dust3_6.png|⑥ 측정자료 USB에 저장]"
+
+        }
+      },
+      hcl: {
+        tabs: [
+          { id: 'equipment', label: '준비물' },
+          { id: 'procedure', label: '업무절차' },
+          { id: 'input', label: '입력매뉴얼' }
+        ],
+        equipment: [
+          "굴뚝시료채취장치 (DSP-707G, DSP-707S)" + CITE_TEXT,
+          "측정값 저장을 위한 업무용USB, 시료채취도관" + CITE_TEXT,
+          "시료채취관, Umbilical Cable, 플랜지" + CITE_TEXT,
+          "임핀저 세트, 흡수액, 받침대" + CITE_TEXT,
+          "기타 전원연결 장비(멀티탭, 전기릴선 등)" + CITE_TEXT,
+          "염화수소 필터 가열박스( 공정시험기준 ES 013015.1e(1.3 간섭물질) : 먼지, 염 등의 간섭물질이 있을 경우 0.45μm의 필터를 사용해야 함)" + CITE_TEXT
+        ],
+        procedure: [
+          "굴뚝시료채취장치의 상태를 사전에 점검하고, 흡수액을 6조 이상(Blank 포함) 준비 후 출발" + CITE_TEXT,
+          "굴뚝시료채취장치를 평탄하고 안정된 장소에 설치하고, 시료채취장치 전단에 실리카겔 흡수병을 설치하여 수분을 제거할 수 있도록 하고 전원 연결" + CITE_TEXT,
+          "굴뚝의 측정지점까지 옮기고, 측정점에 채취관을 수평이 되도록 설치한 후 흡입펌프를 가동하여 Leak 여부 체크 및 채취관 끝부분 까지 시료기체로 치환" + CITE_TEXT,
+          "굴뚝 배출가스의 먼지, 염 등의 간섭물질이 있다고 판단되는 경우, 염화수소 필터 가열박스를 채취관 후단, 임핀저 전단에 설치하여 간선물질에 의한 간섭을 최소화 하여야 함" + CITE_TEXT,
+          "시료채취장치의 채취관 Heating Cable을 연결하고, 온도를 120℃ 이상으로 설정하여 채취관 내에 응축수 발생 방지" + CITE_TEXT,
+          "채취관 온도가 안정되면 채취관 끝에 흡수액(증류수)이 담긴 흡수병을 연결하고, 대기오염공정시험기준에 따라 흡인유량을 1L/min정도로 하여 약 20L의 시료 채취  (이때, 시료채취시간은 자료수집기 시간을 기준으로 5분 단위로 수행하며(예 : 20분, 25분, 30분), 채취한 가스가 비교적 고온이어서 흡수액의 온도가 올라갈 가능성이 있는 경우 흡수병을 냉각조에 넣어 시료 채취)" + CITE_TEXT,
+          "시료채취를 완료하게 되면 펌프가 자동으로 동작을 멈추고 측정자료가 측정장치 내에 저장되며, 시료채취가 끝난 흡수액을 새 흡수액으로 교체한 후 동일한 방법으로 총 5회 이상 측정" + CITE_TEXT,
+          "측정이 완료되면 측정자료는 업무용USB에 다운로드 후 현장에서 철수" + CITE_TEXT,
+          "시료채취기록부에 시료채취시간, 가스채취량, 가스 미터 온도, 대기압, 가스미터 게이지압 등을 기록하여 표준상태의 건조 시료가스채취량 계산" + CITE_TEXT,
+          "시료흡수를 완료한 시료는 시험분석 담당자에게 인계하고, 시험분석담당자는 대기오염공정시험기준 배출가스 중 무기물질편의 시험방법으로 결과 산출" + CITE_TEXT+"[유튜브:https://youtu.be/nReIQNjx380|YouTube]  Standard 용액 제조법",
+          "채취한 시료의 분석값과 다운로드한 측정자료 및 전송데이터를 비교하여 상대정확도 산출" + CITE_TEXT
+        ],
+        input: {
+          text: "➊ Stack Config \n• Xw(수분율) : 해당 굴뚝 D/L 입력값 입력\n• Height(높이) : DSP-707S로부터 측정공까지의 높이\n• Ds(굴뚝내경)\n• r0(표준상태 습가스 밀도) :   고체 및 액체연료를 사용하여 연소시키는 경우 r0 = 1.30kg/㎥로 하여도 무방\n\n➋ System \n•  Vmst(흡입할 총 목표 유량), t(시료채취 시간) : Vmst와 t중 설정 값에 먼저 도달하면 자동 종료되므로, 5분단위 채취를 위해 t를 기준으로 설정하고 Vmst에는 매우 큰 값을 입력\n•  Mode(측정방법) : Manual로 설정\n•  Pump(펌프) : Internal로 설정" + CITE_TEXT + 
+               "\n\n[사진:dust3_1.png|①수분값, 배출구 높이 및 직경 설정]\n"+ 
+              "[사진:dust3_3.png|②노즐 직경, 시료채취유량, 측정시간, MODE(측정방법) 1(Manual), Log(측정기간) : 1초, Pump : 2(Internal)로 설정]\n" + 
+                "[사진:dust3_4.png|③채취관 가열온도(120℃) 설정 화면]\n" + 
+                "[사진:dust3_5.png|④ START 클릭하여 측정시작 및 측정값 확인, 측정종료 후 SAMPLING LIST 메뉴에서 측정자료 USB에 저장]\n"  
+        }
+      },
+      gas: {
+        tabs: [
+          { id: 'equipment', label: '준비물' },
+          { id: 'procedure', label: '업무절차' },
+          { id: 'input', label: '입력매뉴얼' }
+        ],
+        equipment: [
+          "비교측정장비(PG-350A), 전처리장치, 수분트랩장치(또는 임핀저)" + CITE_TEXT,
+          "측정값 저장을 위한 노트북 및 연결 Cable(크로스 케이블)" + CITE_TEXT,
+          "시료채취관 및 도관, 플랜지 또는 받침대" + CITE_TEXT,
+          "기타 전원연결 장비(멀티탭, 전기릴선 등)" + CITE_TEXT
+        ],
+        procedure: [
+          "비교측정 장비의 교정상태 및 각종 필터의 교체 상태 등 장비상태를 사전에 점검 후 출발\n※ 비교측정 장비 교정 : 대기오염공정시험기준에 근거하여 원칙적으로 주1회 이상으로 한다." + CITE_TEXT,
+          "비교측정장비 본체 및 전처리장치를 평탄하고 안정된 장소에 설치하고 전원 연결" + CITE_TEXT,
+          "전원을 ON하면 비교측정장비는 30분동안 안정화(Warming up) 수행(이때, 표시되는 측정값은 안정된 측정값이 아니므로 사용 할 수 없음)" + CITE_TEXT,
+          "전처리장치, 채취관, 도관을 굴뚝의 측정지점까지 올린 후 채취관은 측정공에 설치하고, 전처리장치의 Sample Inlet 부분과 거리가 최소가 되도록 도관 연결" + CITE_TEXT +"\n[사진:gas2_1.png|  ]",
+          "전처리장치 Sample Outlet 연결부분과 비교측정장비의 본체 Sample 연결 부분과 연결" + CITE_TEXT,
+          "노트북의 PG-300 프로그램을 실행한 후 아래와 같이 각각 통신 설정 ⇢   비교측정장비의 메뉴(버튼) - 통신 설정에서 IP주소 확인한 후 노트북의 IP 주소의 끝자리를 측정기 보다 1 더 크게 설정한다.\n⇢   노트북의 서브넷 마스크는 비교측정장비의 SUBNET MASK와 동일하게 입력\n⇢   노트북의 기본 게이트웨이는 비교측정장비의 DEFAULT GATEWAY와 동일하게 입력\n⇢   노트북의 기본설정 DNS 서버, 보조 DNS 서버는 입력하지 않음\n⇢   PG-300 프로그램의 IP 주소는 비교측정장비의 IP 주소와 동일하게 입력" + CITE_TEXT +"\n[사진:gas2_2.png|  ]" +"\n[사진:gas2_3.png|  ]" +"\n[사진:gas2_4.png|  ]",
+          "PG-300 프로그램 메뉴 중 파일설정 아이콘을 클릭하여 저장할 폴더와 파일이름을 입력하고 확인 선택" + CITE_TEXT+"\n[사진:gas2_5.png|  ]",
+          "비교측정장비의 안정화(Warming up)가 완료되면 PG-300 프로그램 메뉴 중 샘플링 시작 버튼을 클릭하여 측정 시작" + CITE_TEXT,
+          "상대정확도를 산출하기 위한 측정시간만큼(5분자료를 기준으로 9회 이상) 측정 실시" + CITE_TEXT,
+          "측정값의 저장을 위해 PG-300 프로그램 메뉴 중 자료검색-5분자료를 선택하여 측정값을 불러온 후 엑셀저장을 선택하여 저장할 폴더와 파일이름을 지정하여 저장하고, 샘플링 중지를 클릭하여 측정 종료" + CITE_TEXT+"\n[사진:gas2_6.png|  ]",
+          "채취관과 전처리장치 사이의 도관, 전처리장치 및 비교측정장비 사이의 도관을 제거하고, 전처리장치 및 비교측정 장비는 일정시간 대기 AIR로 Purge를 실시(비교측정장비는 전원버튼을 누른 후 측정 종료 클릭하여 추가 Purge 실시)" + CITE_TEXT+"\n[사진:gas2_7.png|  ]"+"\n[사진:gas2_8.png|  ]",
+          "측정데이터 및 전송데이터를 비교하여 상대정확도 산출" + CITE_TEXT
+        ],
+        input: {
+          text: "[IP 통신 설정 방법]\n노트북의 IP 주소 끝자리를 비교측정장비보다 \"1\" 더 크게 설정합니다.\n서브넷 마스크와 기본 게이트웨이는 동일하게 맞춥니다." + CITE_TEXT
+        }
+      },
+      flow: {
+        tabs: [
+          { id: 'equipment', label: '준비물' },
+          { id: 'procedure', label: '업무절차' },
+          { id: 'input', label: '입력매뉴얼' },
+          { id: 'rep_point', label: '대표점 측정' }
+        ],
+        equipment: [
+          "비교측정장비(VOT-05D)" + CITE_TEXT,
+          "측정값 저장을 위한 노트북 및 통신장비" + CITE_TEXT,
+          "프로브, 도관, 플랜지 또는 받침대" + CITE_TEXT,
+          "기타 전원연결 장비(멀티탭, 전기릴선 등)" + CITE_TEXT,
+          "휴대용가스측정기 (OPTIMA 7 또는 PG-350, 밀도측정용)" + CITE_TEXT
+        ],
+        procedure: [
+              "프로브 등 설치 및 측정기기 설정" + CITE_TEXT+"[유튜브:https://youtu.be/5ZJOH7Lb-Xg|YouTube]  유량 측정을 위한 준비"+"[유튜브:https://youtu.be/yfwBPYG4aEw|YouTube]  유량 상대정확도 시험",
+          "프로브에 온도센서, 정압 및 전압 라인 연결" + CITE_TEXT+"\n[사진:flow2_1.png|  ]",
+          "측정기에 온도센서, 압력 라인 및 통신장비 연결" + CITE_TEXT+"\n[사진:flow2_2.png|  ]",
+          "메뉴Z1에서 Setup 모드로 변경 (Password 111111로 해제)" + CITE_TEXT+"\n[사진:flow2_3.png|  ]",
+          "메뉴B2에서 수분값 설정" + CITE_TEXT+"\n[사진:flow2_4.png|  ]",
+          "메뉴B3에서 배출구 높이 및 단면적, 피토계수, 밀도 설정 후 메뉴Z1에서 Measuring 모드로 변경(Password 111111로 설정)" + CITE_TEXT+"\n[사진:flow2_5.png|  ]",
+          "메뉴A1에서 측정값 적정성 확인" + CITE_TEXT+"\n[사진:flow2_6.png|  ]",
+          "출장용 컴퓨터와 측정기기 연결" + CITE_TEXT,
+          "노트북 장치관리자에서 포트번호 확인" + CITE_TEXT+"\n[사진:flow2_7.png|  ]",
+          "유속측정 프로그램 실행" + CITE_TEXT+"\n[사진:flow2_8.png|  ]",
+          "환경설정-통신포트 지정" + CITE_TEXT+"\n[사진:flow2_9.png|  ]",
+          "장치관리자에서 확인한 포트번호 입력" + CITE_TEXT+"\n[사진:flow2_10.png|  ]",
+          "데이터 수신여부 확인" + CITE_TEXT+"\n[사진:flow2_11.png|  ]",
+          "유속프로그램에 사업장 정보 입력 및 선택" + CITE_TEXT,
+          "환경설정-사업장명 등록" + CITE_TEXT+"\n[사진:flow2_12.png|  ]",
+          "사업장명 추가" + CITE_TEXT+"\n[사진:flow2_13.png|  ]",
+          "사업장명 저장" + CITE_TEXT+"\n[사진:flow2_14.png|  ]",
+          "환경설정-배출시설 등록" + CITE_TEXT+"\n[사진:flow2_15.png|  ]",
+          "배출시설 등록할 사업장 선택" + CITE_TEXT+"\n[사진:flow2_16.png|  ]",
+          "배출시설 추가" + CITE_TEXT+"\n[사진:flow2_17.png|  ]",
+          "배출시설 정보 입력 후 저장" + CITE_TEXT+"\n[사진:flow2_18.png|  ]",
+          "환경설정-측정장소 선택" + CITE_TEXT+"\n[사진:flow2_19.png|  ]",
+          "사업장명 선택" + CITE_TEXT+"\n[사진:flow2_20.png|  ]",
+          "배출시설 선택" + CITE_TEXT+"\n[사진:flow2_21.png|  ]",
+          "데이터 저장 경로 설정" + CITE_TEXT+"\n[사진:flow2_22.png|  ]",
+          "탐색기에서 저장 경로 지정" + CITE_TEXT+"\n[사진:flow2_23.png|  ]",
+          "측정데이터의 수집 및 검색" + CITE_TEXT,
+          "측정값 적정성 확인 후 자료수집 버튼(F5) 클릭" + CITE_TEXT+"\n[사진:flow2_24.png|  ]",
+          "데이터 검색(F3) 버튼 클릭" + CITE_TEXT+"\n[사진:flow2_25.png|  ]",
+          "측정된 데이터 확인" + CITE_TEXT+"\n[사진:flow2_26.png|  ]",
+          "측정자료 엑셀파일로 저장 (상단 엑셀시트, 엑셀파일 등 사용)" + CITE_TEXT+"\n[사진:flow2_27.png|  ]",
+          "측정데이터 및 전송데이터를 비교하여 상대정확도 산출" + CITE_TEXT
+        ],
+        input: {
+          text: "노트북 장치관리자에서 포트번호를 확인하고 환경설정에서 통신 속도를 9600으로 지정하세요.\n메뉴 Z1에서 Password '111111'을 입력하여 모드 변경이 가능합니다." + CITE_TEXT
+        },
+        rep_point: {
+          text: "장치 및 준비물은 유량 상대정확도 시험과 동일" + CITE_TEXT,
+          procedure: [
+            "프로브 등 장비 설치 및 측정기기 설정" + CITE_TEXT,
+            "출장용 컴퓨터와 측정기기 연결(대표점 프로그램 사용)" + CITE_TEXT,
+            "유속프로그램에 사업장 정보 입력 및 선택" + CITE_TEXT+"\n[사진:flow4_1.png|① 환경설정-배출시설 등록 및 선택  ]"+"\n[사진:flow4_2.png|② 사업장 선택(해당 사업장이 없을 경우 사업장명 등록)  ]"+"\n[사진:flow4_3.png|③ 추가(F2) - 굴뚝번호 입력 - 배출시설명 입력 - 굴뚝반경(cm) 입력 - 저장(F3) - 배출시설 선택  ]",
+            "대기오염공정시험기준 ES 01301.1 “5.4 측정점의 선정”에 따라 대표점을 선정하고, 대표점 프로그램에서 「X초기화」 버튼을 누른 후, 측정점수(대표점 개수 +1)를 입력" + CITE_TEXT+"\n[사진:flow4_4.png|① 대표점 프로그램 초기화 버튼  ]"+"\n[사진:flow4_5.png| ② 측정점수 입력(대표점 개수 +1) ]",
+            "각 측정지점에서 측정 수행" + CITE_TEXT,
+            "측정자료 엑셀파일로 저장" + CITE_TEXT+"\n[사진:flow4_6.png|① 측정지점 - 측정시작&측정자료 수행  ]"+"\n[사진:flow4_7.png|② 데이터 검색 - 엑셀파일 만들기  ]",
+            "각 측정지점 평균값 산정 후, 상대정확도 시트- 대표점(유량)에 입력하여 대표점을 산정" + CITE_TEXT+"\n[사진:flow4_8.png|① 측정지점 평균값 산정(마지막 측정지점 제외)  ]"+"\n[사진:flow4_9.png|② 상대정확도 시트 - 대표점(유량)- 지점, 동압, 대기압, 배가스 온도, 정압 입력   ]"
+          ]
+        }
+      }
+    };
+
+    let currentCat = 'dust';
+    let currentSec = 'equipment';
+
+    const catBtns = document.querySelectorAll('.cat-btn');
+    const sectionNav = document.getElementById('section-nav');
+    const cardTitle = document.getElementById('card-title');
+    const cardContent = document.getElementById('card-content');
+    const mainCard = document.getElementById('main-card');
+
+    // 하위 탭 렌더링
+    function renderTabs() {
+      const tabsData = manualData[currentCat].tabs;
+      let tabsHtml = "";
+      
+      tabsData.forEach((tab, index) => {
+        const isActive = (currentSec === tab.id) || (index === 0 && !tabsData.some(t => t.id === currentSec));
+        if (isActive) currentSec = tab.id;
+        tabsHtml += `<button class="sec-btn ${isActive ? 'active' : ''}" data-sec="${tab.id}">${tab.label}</button>`;
+      });
+      
+      sectionNav.innerHTML = tabsHtml;
+
+      document.querySelectorAll('.sec-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('.sec-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          currentSec = e.target.dataset.sec;
+          renderContent();
+        });
+      });
+    }
+
+    // 1. 텍스트 변환 함수 (유튜브 인식 기능 추가)
+    function processTextWithImages(rawText) {
+      if (!rawText) return "";
+      let htmlOutput = "";
+      const parts = rawText.split(/(\[사진:[^|]+\|[^\]]+\])/);
+      let currentTextBlock = "";
+
+      parts.forEach(part => {
+        if (part.startsWith("[사진:")) {
+          if (currentTextBlock.trim()) {
+            let blockText = currentTextBlock.trim().replace(/\[유튜브:([^|]+)\|([^\]]+)\]/g, '<br><a href="$1" target="_blank" class="youtube-btn">▶ $2</a><br>');
+            htmlOutput += `<div class="tip-box">${blockText}</div>`;
+            currentTextBlock = "";
+          }
+          const match = part.match(/\[사진:([^|]+)\|([^\]]+)\]/);
+          if (match) {
+            htmlOutput += `
+              <div class="image-container">
+                <img src="${match[1]}" alt="${match[2]}">
+                <div class="image-caption">${match[2]}</div>
+              </div>`;
+          }
+        } else {
+          currentTextBlock += part;
+        }
+      });
+      
+      if (currentTextBlock.trim()) {
+        let blockText = currentTextBlock.trim().replace(/\[유튜브:([^|]+)\|([^\]]+)\]/g, '<br><a href="$1" target="_blank" class="youtube-btn">▶ $2</a>');
+        htmlOutput += `<div class="tip-box">${blockText}</div>`;
+      }
+      return htmlOutput;
+    }
+
+    // 2. 화면 렌더링 함수 (유튜브 기능 추가)
+    function renderContent() {
+      mainCard.style.animation = 'none';
+      void mainCard.offsetWidth;
+      mainCard.style.animation = 'slideUp 0.4s ease forwards';
+
+      const data = manualData[currentCat];
+      let htmlString = "";
+      
+      if(currentSec === 'equipment') {
+        cardTitle.innerHTML = '장치 및 준비물';
+        htmlString = `<ul class="data-list list-equipment">`;
+        data.equipment.forEach(item => { htmlString += `<li>${item}</li>`; });
+        htmlString += `</ul>`;
+      } 
+      else if(currentSec === 'procedure') {
+        cardTitle.innerHTML = '업무 절차';
+        htmlString = `<ul class="data-list list-procedure">`;
+        data.procedure.forEach(item => { 
+          let parsedItem = item.replace(/\[사진:([^|]+)\|([^\]]+)\]/g, '<div class="image-container"><img src="$1" alt="$2"><div class="image-caption">$2</div></div>');
+          // 절차 리스트 안에서도 유튜브 기호 인식
+          parsedItem = parsedItem.replace(/\[유튜브:([^|]+)\|([^\]]+)\]/g, '<br><a href="$1" target="_blank" class="youtube-btn">▶ $2</a>');
+          htmlString += `<li>${parsedItem}</li>`; 
+        });
+        htmlString += `</ul>`;
+      } 
+      else if(currentSec === 'input') {
+        cardTitle.innerHTML = '기기 입력 매뉴얼';
+        if(data.input.text) {
+          htmlString += processTextWithImages(data.input.text);
+        }
+      }
+      else if(currentSec === 'rep_point') {
+        cardTitle.innerHTML = '유속 대표점 산정 방법';
+        if(data.rep_point.text) {
+          htmlString += processTextWithImages(data.rep_point.text);
+        }
+        htmlString += `<ul class="data-list list-procedure">`;
+        data.rep_point.procedure.forEach(item => { 
+          let parsedItem = item.replace(/\[사진:([^|]+)\|([^\]]+)\]/g, '<div class="image-container"><img src="$1" alt="$2"><div class="image-caption">$2</div></div>');
+          // 대표점 측정 절차 안에서도 유튜브 기호 인식
+          parsedItem = parsedItem.replace(/\[유튜브:([^|]+)\|([^\]]+)\]/g, '<br><a href="$1" target="_blank" class="youtube-btn">▶ $2</a>');
+          htmlString += `<li>${parsedItem}</li>`; 
+        });
+        htmlString += `</ul>`;
+      }
+
+      cardContent.innerHTML = htmlString;
+    }
+
+    catBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        catBtns.forEach(b => b.classList.remove('active'));
+        
+        // 클릭된 요소가 무엇이든 가장 가까운 버튼 전체를 찾도록 수정
+        const clickedBtn = e.target.closest('.cat-btn'); 
+        clickedBtn.classList.add('active');
+        currentCat = clickedBtn.dataset.cat;
+        
+        clickedBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        
+        currentSec = 'equipment'; 
+        renderTabs();
+        renderContent();
+      });
+    });
+
+    renderTabs();
+    renderContent();
+    
+    // 시작 화면 1.5초 후 부드럽게 사라짐
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        if (splash) {
+          splash.style.opacity = '0';
+          splash.style.visibility = 'hidden';
+        }
+      }, 1500); // 1500 = 1.5초 (원하시면 2000으로 늘리셔도 됩니다)
+    });
+  </script>
+</body>
+</html>
