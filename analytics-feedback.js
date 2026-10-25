@@ -138,6 +138,7 @@
   }
 
   function openFeedbackModal() {
+    if (!endpoint) { toast('요청사항 기능 준비 중입니다.'); return; }
     const menu = currentMenu();
     const backdrop = document.createElement('div');
     backdrop.className = 'feedback-modal-backdrop';
