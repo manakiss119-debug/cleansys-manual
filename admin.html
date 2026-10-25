@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>총량 매뉴얼 관리자</title>
+<style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+*{box-sizing:border-box}body{margin:0;background:#F2F4F6;color:#191F28;font-family:Pretendard,sans-serif}.wrap{max-width:1050px;margin:auto;padding:28px 18px 60px}.head{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;margin-bottom:22px}.title{font-size:1.5rem;font-weight:800}.sub{font-size:.9rem;color:#6B7684;margin-top:5px}.controls{display:flex;gap:8px;flex-wrap:wrap}.input,.select,.btn{height:42px;border-radius:12px;border:1px solid #D9DDE3;background:#fff;padding:0 12px;font:600 .88rem Pretendard,sans-serif}.input{min-width:190px}.btn{background:#3182F6;color:#fff;border:0;cursor:pointer;font-weight:800}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}.card{background:#fff;border-radius:18px;padding:18px;box-shadow:0 6px 24px rgba(0,0,0,.04)}.metric-label{font-size:.82rem;color:#8B95A1;font-weight:700}.metric-value{font-size:1.7rem;font-weight:800;margin-top:8px}.section{margin-top:14px}.section-title{font-size:1rem;font-weight:800;margin-bottom:12px}.bar-row{display:grid;grid-template-columns:minmax(130px,1fr) 3fr 55px;gap:10px;align-items:center;margin:10px 0}.bar-name{font-size:.84rem;color:#4E5968;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bar-bg{height:10px;background:#EEF1F4;border-radius:99px;overflow:hidden}.bar{height:100%;background:#3182F6;border-radius:99px}.bar-num{text-align:right;font-size:.82rem;font-weight:700}.feedback{border-top:1px solid #EEF1F4;padding:14px 0}.feedback:first-child{border-top:0;padding-top:0}.feedback-meta{font-size:.78rem;color:#8B95A1;margin-bottom:6px}.badge{display:inline-block;background:#E8F3FF;color:#3182F6;border-radius:999px;padding:4px 8px;font-size:.72rem;font-weight:800;margin-right:6px}.feedback-text{font-size:.9rem;line-height:1.55;white-space:pre-wrap}.empty{color:#8B95A1;font-size:.9rem;padding:10px 0}.error{display:none;background:#FFF0F0;color:#D92D20;border-radius:12px;padding:12px 14px;font-size:.86rem;margin-bottom:12px}@media(max-width:760px){.head{display:block}.controls{margin-top:14px}.grid{grid-template-columns:repeat(2,1fr)}.bar-row{grid-template-columns:1.4fr 2fr 44px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div><div class="title">총량 매뉴얼 관리자</div><div class="sub">접속 통계, 메뉴 이용 현황, 요청사항 확인</div></div>
+    <div class="controls">
+      <input id="adminKey" class="input" type="password" autocomplete="off" placeholder="관리자 비밀번호">
+      <select id="days" class="select"><option value="7">7일</option><option value="30" selected>30일</option><option value="90">90일</option><option value="365">1년</option></select>
+      <button id="loadBtn" class="btn">조회</button>
+    </div>
+  </div>
+  <div id="error" class="error"></div>
+  <div class="grid">
+    <div class="card"><div class="metric-label">순 방문자</div><div id="visitors" class="metric-value">-</div></div>
+    <div class="card"><div class="metric-label">방문 세션</div><div id="sessions" class="metric-value">-</div></div>
+    <div class="card"><div class="metric-label">페이지 접속</div><div id="pageViews" class="metric-value">-</div></div>
+    <div class="card"><div class="metric-label">메뉴 조회</div><div id="menuViews" class="metric-value">-</div></div>
+  </div>
+  <div class="card section"><div class="section-title">많이 본 메뉴</div><div id="topMenus" class="empty">조회 후 표시됩니다.</div></div>
+  <div class="card section"><div class="section-title">분야별 조회</div><div id="categories" class="empty">조회 후 표시됩니다.</div></div>
+  <div class="card section"><div class="section-title">최근 요청사항</div><div id="feedback" class="empty">조회 후 표시됩니다.</div></div>
+</div>
+<script>
+const CONFIG_URL='./analytics-config.json';let endpoint='';const $=id=>document.getElementById(id);const fmt=v=>Number(v||0).toLocaleString('ko-KR');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function loadConfig(){const r=await fetch(`${CONFIG_URL}?v=${Date.now()}`,{cache:'no-store'});const c=await r.json();endpoint=(c.endpoint||'').trim();if(!endpoint)throw new Error('통계 서버 주소가 아직 설정되지 않았습니다.');}
+function jsonp(params){return new Promise((resolve,reject)=>{const cb=`cb_${Date.now()}_${Math.random().toString(36).slice(2)}`;const s=document.createElement('script');const t=setTimeout(()=>done(new Error('응답 시간이 초과되었습니다.')),10000);function done(err,data){clearTimeout(t);delete window[cb];s.remove();err?reject(err):resolve(data)}window[cb]=d=>done(null,d);const q=new URLSearchParams({...params,callback:cb});s.onerror=()=>done(new Error('통계 서버에 연결하지 못했습니다.'));s.src=`${endpoint}?${q.toString()}`;document.body.appendChild(s);});}
+function bars(id,items){const el=$(id);if(!items?.length){el.className='empty';el.textContent='자료가 없습니다.';return}const max=Math.max(...items.map(x=>Number(x.views||0)),1);el.className='';el.innerHTML=items.map(x=>`<div class="bar-row"><div class="bar-name" title="${esc(x.name)}">${esc(x.name)}</div><div class="bar-bg"><div class="bar" style="width:${Math.max(2,Number(x.views||0)/max*100)}%"></div></div><div class="bar-num">${fmt(x.views)}</div></div>`).join('');}
+function feedback(items){const el=$('feedback');if(!items?.length){el.className='empty';el.textContent='접수된 요청사항이 없습니다.';return}el.className='';el.innerHTML=items.map(x=>`<div class="feedback"><div class="feedback-meta">${esc(x.timestamp)} · ${esc(x.category)} · ${esc(x.section)}</div><div><span class="badge">${esc(x.type)}</span><span class="badge">${esc(x.status)}</span></div><div class="feedback-text">${esc(x.message)}</div></div>`).join('');}
+async function loadAll(){const err=$('error');err.style.display='none';const key=$('adminKey').value.trim();if(!key){err.textContent='관리자 비밀번호를 입력하세요.';err.style.display='block';return}$('loadBtn').disabled=true;$('loadBtn').textContent='조회 중';try{if(!endpoint)await loadConfig();const [s,f]=await Promise.all([jsonp({action:'stats',key,days:$('days').value}),jsonp({action:'feedback',key,limit:100})]);if(!s.ok||!f.ok)throw new Error('관리자 비밀번호가 맞지 않습니다.');$('visitors').textContent=fmt(s.unique_visitors);$('sessions').textContent=fmt(s.sessions);$('pageViews').textContent=fmt(s.page_views);$('menuViews').textContent=fmt(s.menu_views);bars('topMenus',s.top_menus);bars('categories',s.categories);feedback(f.items);}catch(e){err.textContent=e.message||'조회 중 오류가 발생했습니다.';err.style.display='block'}finally{$('loadBtn').disabled=false;$('loadBtn').textContent='조회'}}
+$('loadBtn').addEventListener('click',loadAll);$('adminKey').addEventListener('keydown',e=>{if(e.key==='Enter')loadAll()});
+</script>
+</body>
+</html>
