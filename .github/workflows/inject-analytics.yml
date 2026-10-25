@@ -16,21 +16,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Inject script tag into index.html
+      - name: Inject feature and safety guard
         shell: python
         run: |
           from pathlib import Path
-          p = Path('index.html')
-          text = p.read_text(encoding='utf-8')
+
+          index = Path('index.html')
+          text = index.read_text(encoding='utf-8')
           tag = '<script src="analytics-feedback.js"></script>'
           if tag not in text:
               if '</body>' not in text:
                   raise SystemExit('index.html에 </body>가 없습니다.')
               text = text.replace('</body>', f'  {tag}\n</body>', 1)
-              p.write_text(text, encoding='utf-8')
+              index.write_text(text, encoding='utf-8')
               print('analytics-feedback.js 연결 완료')
           else:
-              print('이미 연결되어 있습니다.')
+              print('index.html은 이미 연결되어 있습니다.')
+
+          js = Path('analytics-feedback.js')
+          jstext = js.read_text(encoding='utf-8')
+          old = "function openFeedbackModal() {\n    const menu = currentMenu();"
+          new = "function openFeedbackModal() {\n    if (!endpoint) { toast('요청사항 기능 준비 중입니다.'); return; }\n    const menu = currentMenu();"
+          if old in jstext:
+              jstext = jstext.replace(old, new, 1)
+              js.write_text(jstext, encoding='utf-8')
+              print('백엔드 미연결 안전장치 적용 완료')
+          elif "요청사항 기능 준비 중입니다." in jstext:
+              print('안전장치는 이미 적용되어 있습니다.')
+          else:
+              raise SystemExit('analytics-feedback.js에서 패치 위치를 찾지 못했습니다.')
 
       - name: Commit change
         run: |
@@ -40,6 +54,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          git commit -m "Connect analytics and feedback module"
+          git add index.html analytics-feedback.js
+          git commit -m "Connect analytics module safely"
           git push
